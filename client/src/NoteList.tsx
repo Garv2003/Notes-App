@@ -9,10 +9,11 @@ import {
   Row,
   Stack,
 } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import ReactSelect from "react-select";
 import { Tag } from "./App";
 import styles from "./NoteList.module.css";
+import { SignedIn, SignedOut, UserButton, useUser } from "@clerk/clerk-react";
 
 type SimplifiedNote = {
   tags: Tag[];
@@ -58,6 +59,19 @@ function NoteList({
     });
   }, [title, selectedTags, notes]);
 
+  const { isSignedIn, user, isLoaded } = useUser();
+  const navigate = useNavigate();
+
+  if (!isLoaded) {
+    return null;
+  }
+
+  if (!isSignedIn) {
+    navigate("/sign-in");
+    return null;
+  }
+
+  console.log(user.id);
   return (
     <>
       <Row className="align-items-center mb-4">
@@ -75,6 +89,17 @@ function NoteList({
             >
               Edit Tags
             </Button>
+
+            <SignedOut>
+              <Button variant="primary">
+                <Link to="/sign-in" className="text-white text-decoration-none">
+                  Sign In
+                </Link>
+              </Button>
+            </SignedOut>
+            <SignedIn>
+              <UserButton afterSignOutUrl="/sign-in" />
+            </SignedIn>
           </Stack>
         </Col>
       </Row>
