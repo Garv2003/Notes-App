@@ -18,7 +18,7 @@ const GetUserTags = async (req: Request, res: Response) => {
             },
         });
 
-        await client.setEx(`tags:${userId}`, 3600, JSON.stringify(tags));
+        await client.setEx(`tags:${userId}`, 600, JSON.stringify(tags));
 
         res.json(tags);
     }

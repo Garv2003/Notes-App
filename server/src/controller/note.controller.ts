@@ -21,7 +21,7 @@ const GetUserNotes = async (req: Request, res: Response) => {
             },
         })
 
-        await client.setEx(`notes:user:${id}`, 600, JSON.stringify(notes))
+        await client.setEx(`notes:user:${id}`, 100, JSON.stringify(notes))
 
         res.json(notes)
     } catch (err) {
@@ -81,7 +81,7 @@ const GetNoteById = async (req: Request, res: Response) => {
             },
         })
 
-        await client.setEx(`note:noteId:${id}`, 600, JSON.stringify(note))
+        await client.setEx(`note:noteId:${id}`, 100, JSON.stringify(note))
 
         res.json({ success: true, note })
     }
@@ -141,6 +141,7 @@ const UpdateNote = async (req: Request, res: Response) => {
         })
 
         await client.del(`note:user:${id}`)
+        await client.del(`note:noteId:${id}`)
 
         res.status(200).json({ success: true, note })
     } catch (err) {
@@ -161,6 +162,7 @@ const DeleteNote = async (req: Request, res: Response) => {
         })
 
         await client.del(`note:user:${id}`)
+        await client.del(`note:noteId:${id}`)
 
         res.status(200).json({ success: true })
     } catch (err) {
