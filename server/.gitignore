@@ -3,7 +3,7 @@ node_modules
 .env
 
 # Ignore the build directory
-build
+dist
 
 # ignore prisma migrations
 
