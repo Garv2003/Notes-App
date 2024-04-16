@@ -18,10 +18,7 @@ app.use(morgan('tiny'))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
-app.get('/', (req: express.Request, res: express.Response) => {
-    res.send("For Testing Purpose")
-})
-
+app.use('/', require('./route/test.route').testRouter)
 app.use('/', require('./route/auth.route').authRouter)
 app.use('/', require('./route/note.route').noteRouter)
 app.use('/', require('./route/tag.route').tagRouter)
