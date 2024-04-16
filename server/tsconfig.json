@@ -9,7 +9,8 @@
     "esModuleInterop": true,
     "declaration": true,
     "moduleResolution": "node",
-    "noImplicitAny": false
+    "noImplicitAny": false,
+    "module": "commonjs"
   },
   "include": ["src/**/*.ts"]
 }
