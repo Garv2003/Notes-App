@@ -2,16 +2,6 @@ type Note = {
     id: string;
 } & NoteData;
 
-type RawNote = {
-    id: string;
-} & RawNoteData;
-
-type RawNoteData = {
-    title: string;
-    markdown: string;
-    tagIds: string[];
-};
-
 type NewNoteProps = {
     onSubmit: (data: NoteData) => void;
     onAddTag: (tag: Tag) => void;
@@ -64,4 +54,4 @@ type EditNoteProps = {
     availableTags: Tag[];
 };
 
-export type { SimplifiedNote, NoteListProps, EditTagsModalProps, Note, NoteData, RawNote, RawNoteData, Tag, EditNoteProps, NewNoteProps, NoteFormProps };
+export type { SimplifiedNote, NoteListProps, EditTagsModalProps, Note, NoteData, Tag, EditNoteProps, NewNoteProps, NoteFormProps };

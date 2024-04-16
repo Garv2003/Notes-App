@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Button, Col, Form, Row, Stack } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import ReactSelect from "react-select";
 import Loader from "../components/Loader";
 import { Tag, NoteListProps, Note } from "../utils/type";
@@ -18,6 +18,9 @@ function NoteList({ isLoaded, user }: NoteListProps) {
   const [editTagsModalIsOpen, setEditTagsModalIsOpen] = useState(false);
   const [notes, setNotes] = useRecoilState<Note[]>(notesState);
   const [availableTags, setAvailableTags] = useRecoilState<Tag[]>(tagsState);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   const filteredNotes = useMemo(() => {
     return notes?.filter((note) => {
@@ -32,6 +35,14 @@ function NoteList({ isLoaded, user }: NoteListProps) {
     });
   }, [title, selectedTags, notes]);
 
+  useEffect(() => {
+    if (!user) {
+      navigate("/sign-in");
+    }
+
+    fetchData();
+  }, [isLoaded, user]);
+
   const onDeleteTag = async (id: string) => {
     try {
       await axios.delete(import.meta.env.VITE_API_URL + `/tag/${id}`);
@@ -42,9 +53,6 @@ function NoteList({ isLoaded, user }: NoteListProps) {
       console.error(err);
     }
   };
-
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
 
   const fetchData = async () => {
     try {
@@ -66,11 +74,7 @@ function NoteList({ isLoaded, user }: NoteListProps) {
     }
   };
 
-  useEffect(() => {
-    fetchData();
-  }, [isLoaded, user]);
-
-  if (loading) {
+  if (loading || !isLoaded) {
     return <Loader />;
   }
 
