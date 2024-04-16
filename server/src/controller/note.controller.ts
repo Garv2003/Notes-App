@@ -140,7 +140,7 @@ const UpdateNote = async (req: Request, res: Response) => {
             }
         })
 
-        await client.del(`note:user:${id}`)
+        await client.del(`notes:user:${note.userId}`)
         await client.del(`note:noteId:${id}`)
 
         res.status(200).json({ success: true, note })
@@ -155,13 +155,13 @@ const DeleteNote = async (req: Request, res: Response) => {
 
     try {
 
-        await prisma.notes.delete({
+        const note = await prisma.notes.delete({
             where: {
                 id: id,
             },
         })
 
-        await client.del(`note:user:${id}`)
+        await client.del(`notes:user:${note.userId}`)
         await client.del(`note:noteId:${id}`)
 
         res.status(200).json({ success: true })
