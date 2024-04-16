@@ -1,142 +1,49 @@
 import "bootstrap/dist/css/bootstrap.min.css";
-import { useMemo } from "react";
 import { Container } from "react-bootstrap";
 import { Routes, Route, Navigate } from "react-router-dom";
-import NewNote from "./NewNote";
-import { useLocalStorage } from "./useLocalStorage";
-import { v4 as uuidV4 } from "uuid";
-import NoteList from "./NoteList";
-import { NoteLayout } from "./NoteLayout";
-import { Note } from "./Note";
-import { EditNote } from "./EditNote";
+import NewNote from "./pages/NewNote";
+import NoteList from "./pages/NoteList";
+import { NoteLayout } from "./layout/NoteLayout";
+import { Note } from "./pages/Note";
+import { EditNote } from "./pages/EditNote";
 import SignInPage from "./pages/SignInPage";
 import SignUpPage from "./pages/SignUpPage";
-
-export type Note = {
-  id: string;
-} & NoteData;
-
-export type RawNote = {
-  id: string;
-} & RawNoteData;
-
-export type RawNoteData = {
-  title: string;
-  markdown: string;
-  tagIds: string[];
-};
-
-export type NoteData = {
-  title: string;
-  markdown: string;
-  tags: Tag[];
-};
-
-export type Tag = {
-  id: string;
-  label: string;
-};
+import { useUser } from "@clerk/clerk-react";
+import { useEffect } from "react";
+import axios from "axios";
 
 function App() {
-  const [notes, setNotes] = useLocalStorage<RawNote[]>("NOTES", []);
-  const [tags, setTags] = useLocalStorage<Tag[]>("TAGS", []);
+  const { isSignedIn, user, isLoaded } = useUser();
 
-  const notesWithTags = useMemo(() => {
-    return notes.map((note) => {
-      return {
-        ...note,
-        tags: tags.filter((tag) => note.tagIds.includes(tag.id)),
-      };
-    });
-  }, [notes, tags]);
+  const SetAddUser = async () => {
+    if (isLoaded && isSignedIn) {
+      await axios.post(import.meta.env.VITE_API_URL + "/new_user", user);
+    }
+  };
 
-  function onCreateNote({ tags, ...data }: NoteData) {
-    setNotes((prevNotes) => {
-      return [
-        ...prevNotes,
-        { ...data, id: uuidV4(), tagIds: tags.map((tag) => tag.id) },
-      ];
-    });
-  }
-
-  function onUpdateNote(id: string, { tags, ...data }: NoteData) {
-    setNotes((prevNotes) => {
-      return prevNotes.map((note) => {
-        if (note.id === id) {
-          return { ...note, ...data, tagIds: tags.map((tag) => tag.id) };
-        } else {
-          return note;
-        }
-      });
-    });
-  }
-
-  function onDeleteNote(id: string) {
-    setNotes((prevNotes) => {
-      return prevNotes.filter((note) => note.id !== id);
-    });
-  }
-
-  function addTag(tag: Tag) {
-    setTags((prev) => [...prev, tag]);
-  }
-
-  function updateTag(id: string, label: string) {
-    setTags((prevTags) => {
-      return prevTags.map((tag) => {
-        if (tag.id === id) {
-          return { ...tag, label };
-        } else {
-          return tag;
-        }
-      });
-    });
-  }
-
-  function deleteTag(id: string) {
-    setTags((prevTags) => {
-      return prevTags.filter((tag) => tag.id !== id);
-    });
-  }
+  useEffect(() => {
+    SetAddUser();
+  }, [isLoaded, isSignedIn, user]);
 
   return (
-    <Container className="my-4">
+    <Container>
       <Routes>
         <Route path="/sign-in" element={<SignInPage />} />
         <Route path="/sign-up" element={<SignUpPage />} />
         <Route
           path="/"
-          element={
-            <NoteList
-              notes={notesWithTags}
-              availableTags={tags}
-              onUpdateTag={updateTag}
-              onDeleteTag={deleteTag}
-            />
-          }
+          element={<NoteList isLoaded={isLoaded} user={user} />}
         />
         <Route
           path="/new"
-          element={
-            <NewNote
-              onSubmit={onCreateNote}
-              onAddTag={addTag}
-              availableTags={tags}
-            />
-          }
+          element={<NewNote isLoaded={isLoaded} user={user} />}
         />
-        <Route path="/:id" element={<NoteLayout notes={notesWithTags} />}>
-          <Route index element={<Note onDelete={onDeleteNote} />} />
-          <Route
-            path="edit"
-            element={
-              <EditNote
-                onSubmit={onUpdateNote}
-                onAddTag={addTag}
-                availableTags={tags}
-              />
-            }
-          />
+        <Route
+          path="/:id"
+          element={<NoteLayout user={user} isLoaded={isLoaded} />}
+        >
+          <Route index element={<Note />} />
+          <Route path="edit" element={<EditNote user={user} />} />
         </Route>
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>

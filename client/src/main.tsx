@@ -1,9 +1,10 @@
-import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.tsx";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { BrowserRouter } from "react-router-dom";
 import { ClerkProvider } from "@clerk/clerk-react";
+import { Toaster } from "react-hot-toast";
+import { RecoilRoot } from "recoil";
 
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
 
@@ -12,11 +13,12 @@ if (!PUBLISHABLE_KEY) {
 }
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
-    <ClerkProvider publishableKey={PUBLISHABLE_KEY}>
-      <BrowserRouter>
+  <ClerkProvider publishableKey={PUBLISHABLE_KEY}>
+    <BrowserRouter>
+      <Toaster />
+      <RecoilRoot>
         <App />
-      </BrowserRouter>
-    </ClerkProvider>
-  </React.StrictMode>
+      </RecoilRoot>
+    </BrowserRouter>
+  </ClerkProvider>
 );

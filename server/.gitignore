@@ -1,3 +1,10 @@
 node_modules
 # Keep environment variables out of version control
 .env
+
+# Ignore the build directory
+build
+
+# ignore prisma migrations
+
+prisma/migrations

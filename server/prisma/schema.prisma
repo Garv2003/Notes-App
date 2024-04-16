@@ -14,14 +14,16 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  username  String   @unique
-  name      String?
-  password  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  notes     Notes[]
+  id         String   @id @default(cuid())
+  email      String   @unique
+  username   String   @unique
+  name       String
+  clerkId    String   @unique
+  profileImg String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  tags       Tag[]
+  notes      Notes[]
 }
 
 model Notes {
@@ -30,13 +32,15 @@ model Notes {
   content   String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  user      User     @relation(fields: [userId], references: [id])
-  userId    String
-  tags      tags[]
+  user      User?    @relation(fields: [userId], references: [clerkId], onDelete: Cascade, onUpdate: Cascade)
+  userId    String?
+  tags      Tag[]
 }
 
-model tags {
-  id    String  @id @default(cuid())
-  name  String
-  notes Notes[]
+model Tag {
+  id     String  @id @default(cuid())
+  label  String  @unique
+  notes  Notes[]
+  user   User?   @relation(fields: [userId], references: [clerkId], onDelete: Cascade, onUpdate: Cascade)
+  userId String?
 }

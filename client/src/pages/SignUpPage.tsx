@@ -10,7 +10,7 @@ export default function SignUpPage() {
         height: "100vh",
       }}
     >
-      <SignUp />;
+      <SignUp />
     </div>
   );
 }
