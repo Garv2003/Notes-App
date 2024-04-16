@@ -55,6 +55,9 @@ function NoteList({ isLoaded, user }: NoteListProps) {
       if (!isLoaded) {
         return;
       }
+      if (!user && isLoaded) {
+        window.location.href = "/sign-in";
+      }
       const [notesRes, tagsRes] = await Promise.all([
         axios.get(import.meta.env.VITE_API_URL + `/notes/user/${user.id}`),
         axios.get(import.meta.env.VITE_API_URL + `/tags/user/${user.id}`),
