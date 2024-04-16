@@ -15,11 +15,6 @@ function NewNote({ user, isLoaded }: NoteListProps) {
 
   if (!isLoaded) return <Loader />;
 
-  if (!user) {
-    navigate("/sign-in");
-    return null;
-  }
-
   async function onSubmit(data: NoteData) {
     try {
       setLoading(true);

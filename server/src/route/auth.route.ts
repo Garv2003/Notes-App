@@ -7,31 +7,36 @@ router.post('/new_user', async (req: express.Request, res: express.Response) => 
 
     const { id, fullName, primaryEmailAddress, imageUrl, username } = req.body
 
-    if (!id || !username || !fullName) {
+    if (!id || !username || !primaryEmailAddress.emailAddress) {
         return res.status(301).send('Id, firstName and email are required')
     }
 
-    const existuser = await prisma.user.findUnique({
-        where: {
-            clerkId: id
-        }
-    })
+    try {
+        const existuser = await prisma.user.findUnique({
+            where: {
+                clerkId: id
+            }
+        })
 
-    if (existuser) {
-        return res.status(201).send('User already exists')
+        if (existuser) {
+            return res.status(201).send('User already exists')
+        }
+
+        const user = await prisma.user.create({
+            data: {
+                clerkId: id,
+                name: fullName || username,
+                email: primaryEmailAddress.emailAddress,
+                profileImg: imageUrl,
+                username: username
+            }
+        })
+
+        res.json({ success: true, message: 'User created successfully' })
+    } catch (err: any) {
+        console.log(err)
+        res.status(500).send('Internal Server Error')
     }
-
-    const user = await prisma.user.create({
-        data: {
-            clerkId: id,
-            name: fullName,
-            email: primaryEmailAddress.emailAddress,
-            profileImg: imageUrl,
-            username: username
-        }
-    })
-
-    res.json({ success: true, message: 'User created successfully' })
 })
 
 router.post('/update_user', async (req: express.Request, res: express.Response) => {

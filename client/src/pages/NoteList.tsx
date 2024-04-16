@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Button, Col, Form, Row, Stack } from "react-bootstrap";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import ReactSelect from "react-select";
 import Loader from "../components/Loader";
 import { Tag, NoteListProps, Note } from "../utils/type";
@@ -20,7 +20,6 @@ function NoteList({ isLoaded, user }: NoteListProps) {
   const [availableTags, setAvailableTags] = useRecoilState<Tag[]>(tagsState);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState(null);
-  const navigate = useNavigate();
 
   const filteredNotes = useMemo(() => {
     return notes?.filter((note) => {
@@ -36,12 +35,8 @@ function NoteList({ isLoaded, user }: NoteListProps) {
   }, [title, selectedTags, notes]);
 
   useEffect(() => {
-    if (!user) {
-      navigate("/sign-in");
-    }
-
     fetchData();
-  }, [isLoaded, user]);
+  }, [isLoaded]);
 
   const onDeleteTag = async (id: string) => {
     try {
