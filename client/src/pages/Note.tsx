@@ -8,7 +8,7 @@ import { notesState, tagsState } from "../store/state";
 import toast from "react-hot-toast";
 import { useState } from "react";
 
-export function Note() {
+function Note() {
   const note = useNote();
   const navigate = useNavigate();
   const [notes, setNotes] = useRecoilState(notesState);
@@ -89,3 +89,5 @@ export function Note() {
     </>
   );
 }
+
+export default Note;

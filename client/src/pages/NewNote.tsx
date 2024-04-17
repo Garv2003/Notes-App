@@ -1,4 +1,4 @@
-import { NoteForm } from "../components/NoteForm";
+import NoteForm from "../components/NoteForm";
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";

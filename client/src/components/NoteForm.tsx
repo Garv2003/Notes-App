@@ -5,7 +5,7 @@ import CreatableReactSelect from "react-select/creatable";
 import { NoteFormProps, Tag } from "../utils/type";
 import { v4 as uuidV4 } from "uuid";
 
-export function NoteForm({
+function NoteForm({
   onSubmit,
   onAddTag,
   availableTags,
@@ -107,3 +107,5 @@ export function NoteForm({
     </Form>
   );
 }
+
+export default NoteForm;

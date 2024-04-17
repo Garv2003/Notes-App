@@ -1,6 +1,6 @@
 import { SignUp } from "@clerk/clerk-react";
 
-export default function SignUpPage() {
+function SignUpPage() {
   return (
     <div
       style={{
@@ -14,3 +14,5 @@ export default function SignUpPage() {
     </div>
   );
 }
+
+export default SignUpPage;

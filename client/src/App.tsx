@@ -1,15 +1,16 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Container } from "react-bootstrap";
 import { Routes, Route, Navigate } from "react-router-dom";
-import NewNote from "./pages/NewNote";
-import NoteList from "./pages/NoteList";
-import { NoteLayout } from "./layout/NoteLayout";
-import { Note } from "./pages/Note";
-import { EditNote } from "./pages/EditNote";
-import SignInPage from "./pages/SignInPage";
-import SignUpPage from "./pages/SignUpPage";
+import { useEffect, Suspense, lazy } from "react";
+const NewNote = lazy(() => import("./pages/NewNote"));
+const NoteList = lazy(() => import("./pages/NoteList"));
+const NoteLayout = lazy(() => import("./layout/NoteLayout"));
+const Note = lazy(() => import("./pages/Note"));
+const EditNote = lazy(() => import("./pages/EditNote"));
+const SignInPage = lazy(() => import("./pages/SignInPage"));
+const SignUpPage = lazy(() => import("./pages/SignUpPage"));
 import { useUser } from "@clerk/clerk-react";
-import { useEffect } from "react";
+import Loader from "./components/Loader";
 import axios from "axios";
 
 function App() {
@@ -28,22 +29,63 @@ function App() {
   return (
     <Container>
       <Routes>
-        <Route path="/sign-in" element={<SignInPage />} />
-        <Route path="/sign-up" element={<SignUpPage />} />
+        <Route
+          path="/sign-in"
+          element={
+            <Suspense fallback={<Loader />}>
+              <SignInPage />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/sign-up"
+          element={
+            <Suspense fallback={<Loader />}>
+              <SignUpPage />
+            </Suspense>
+          }
+        />
         <Route
           path="/"
-          element={<NoteList isLoaded={isLoaded} user={user} />}
+          element={
+            <Suspense fallback={<Loader />}>
+              <NoteList isLoaded={isLoaded} user={user} />
+            </Suspense>
+          }
         />
         <Route
           path="/new"
-          element={<NewNote isLoaded={isLoaded} user={user} />}
+          element={
+            <Suspense fallback={<Loader />}>
+              <NewNote isLoaded={isLoaded} user={user} />
+            </Suspense>
+          }
         />
         <Route
           path="/:id"
-          element={<NoteLayout user={user} isLoaded={isLoaded} />}
+          element={
+            <Suspense fallback={<Loader />}>
+              <NoteLayout user={user} isLoaded={isLoaded} />
+            </Suspense>
+          }
         >
-          <Route index element={<Note />} />
-          <Route path="edit" element={<EditNote user={user} />} />
+          <Route
+            index
+            element={
+              <Suspense fallback={<Loader />}>
+                <Note />
+              </Suspense>
+            }
+          />
+
+          <Route
+            path="edit"
+            element={
+              <Suspense fallback={<Loader />}>
+                <EditNote user={user} />
+              </Suspense>
+            }
+          />
         </Route>
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>

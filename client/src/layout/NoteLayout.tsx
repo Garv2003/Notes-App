@@ -9,7 +9,7 @@ import { NoteListProps, Note } from "../utils/type";
 import { useRecoilValue } from "recoil";
 import { notesState } from "../store/state";
 
-export function NoteLayout({ isLoaded, user }: NoteListProps) {
+function NoteLayout({ isLoaded, user }: NoteListProps) {
   const { id } = useParams();
   const notes = useRecoilValue<Note[]>(notesState);
 
@@ -27,3 +27,5 @@ export function NoteLayout({ isLoaded, user }: NoteListProps) {
 export function useNote() {
   return useOutletContext<Note>();
 }
+
+export default NoteLayout;

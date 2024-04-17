@@ -1,4 +1,4 @@
-import { NoteForm } from "../components/NoteForm";
+import NoteForm from "../components/NoteForm";
 import { useNote } from "../layout/NoteLayout";
 import { NoteData, Tag, NoteListProps } from "../utils/type";
 import Navbar from "../layout/Navbar";
@@ -9,7 +9,7 @@ import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
-export function EditNote({ user }: NoteListProps) {
+function EditNote({ user }: NoteListProps) {
   const note = useNote();
   const [availableTags, setAvailableTags] = useRecoilState<Tag[]>(tagsState);
   const [loading, setLoading] = useState(false);
@@ -60,3 +60,5 @@ export function EditNote({ user }: NoteListProps) {
     </>
   );
 }
+
+export default EditNote;
