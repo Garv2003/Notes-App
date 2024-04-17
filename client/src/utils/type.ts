@@ -35,12 +35,6 @@ type SimplifiedNote = {
     id: string;
 };
 
-type NoteListProps = {
-    isLoaded?: boolean;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    user: any;
-};
-
 type EditTagsModalProps = {
     show: boolean;
     availableTags: Tag[];
@@ -54,4 +48,4 @@ type EditNoteProps = {
     availableTags: Tag[];
 };
 
-export type { SimplifiedNote, NoteListProps, EditTagsModalProps, Note, NoteData, Tag, EditNoteProps, NewNoteProps, NoteFormProps };
+export type { SimplifiedNote, EditTagsModalProps, Note, NoteData, Tag, EditNoteProps, NewNoteProps, NoteFormProps };

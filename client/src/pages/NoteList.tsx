@@ -3,7 +3,7 @@ import { Button, Col, Form, Row, Stack } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import ReactSelect from "react-select";
 import Loader from "../components/Loader";
-import { Tag, NoteListProps, Note } from "../utils/type";
+import { Tag, Note } from "../utils/type";
 import EditTagsModal from "../components/EditTagsModal";
 import NoteCard from "../components/NoteCard";
 import axios from "axios";
@@ -11,15 +11,17 @@ import Navbar from "../layout/Navbar";
 import { useRecoilState } from "recoil";
 import { notesState, tagsState } from "../store/state";
 import toast from "react-hot-toast";
+import { useAuth } from "../context/auth";
 
-function NoteList({ isLoaded, user }: NoteListProps) {
+function NoteList() {
   const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
   const [title, setTitle] = useState("");
   const [editTagsModalIsOpen, setEditTagsModalIsOpen] = useState(false);
   const [notes, setNotes] = useRecoilState<Note[]>(notesState);
   const [availableTags, setAvailableTags] = useRecoilState<Tag[]>(tagsState);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState(null);
+  const { auth } = useAuth();
 
   const filteredNotes = useMemo(() => {
     return notes?.filter((note) => {
@@ -36,7 +38,7 @@ function NoteList({ isLoaded, user }: NoteListProps) {
 
   useEffect(() => {
     fetchData();
-  }, [isLoaded]);
+  }, []);
 
   const onDeleteTag = async (id: string) => {
     try {
@@ -51,16 +53,18 @@ function NoteList({ isLoaded, user }: NoteListProps) {
 
   const fetchData = async () => {
     try {
-      setLoading(true);
-      if (!isLoaded) {
+      if (!auth.user) {
         return;
       }
-      if (!user && isLoaded) {
-        window.location.href = "/sign-in";
-      }
       const [notesRes, tagsRes] = await Promise.all([
-        axios.get(import.meta.env.VITE_API_URL + `/notes/user/${user.id}`),
-        axios.get(import.meta.env.VITE_API_URL + `/tags/user/${user.id}`),
+        axios.get(
+          import.meta.env.VITE_API_URL +
+            `/notes/user/${(auth.user as { id: string }).id}`
+        ),
+        axios.get(
+          import.meta.env.VITE_API_URL +
+            `/tags/user/${(auth.user as { id: string }).id}`
+        ),
       ]);
       setNotes(notesRes.data);
       setAvailableTags(tagsRes.data);
@@ -72,7 +76,7 @@ function NoteList({ isLoaded, user }: NoteListProps) {
     }
   };
 
-  if (loading || !isLoaded) {
+  if (loading) {
     return <Loader />;
   }
 
@@ -138,7 +142,9 @@ function NoteList({ isLoaded, user }: NoteListProps) {
                       return {
                         label: tag.label,
                         id: tag.value,
-                        userId: user.id,
+                        userId: (auth.user
+                          ? (auth.user as { id: string }).id
+                          : undefined) as unknown as string,
                       };
                     })
                   );

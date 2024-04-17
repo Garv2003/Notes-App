@@ -2,25 +2,24 @@ import NoteForm from "../components/NoteForm";
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { Tag, NoteData, NoteListProps } from "../utils/type";
+import { Tag, NoteData } from "../utils/type";
 import toast from "react-hot-toast";
 import { useRecoilState } from "recoil";
 import { tagsState } from "../store/state";
-import Loader from "../components/Loader";
+import { useAuth } from "../context/auth";
 
-function NewNote({ user, isLoaded }: NoteListProps) {
+function NewNote() {
   const navigate = useNavigate();
   const [availableTags, setAvailableTags] = useRecoilState<Tag[]>(tagsState);
+  const { auth } = useAuth() || {};
   const [loading, setLoading] = useState(false);
-
-  if (!isLoaded) return <Loader />;
 
   async function onSubmit(data: NoteData) {
     try {
       setLoading(true);
       await axios.post(import.meta.env.VITE_API_URL + "/note", {
         ...data,
-        userId: user.id,
+        userId: auth.user?.id,
       });
       setLoading(false);
       toast.success("Note created successfully!");
@@ -44,7 +43,7 @@ function NewNote({ user, isLoaded }: NoteListProps) {
         onAddTag={onAddTag}
         availableTags={availableTags}
         loading={loading}
-        user={user.id}
+        user={auth.user?.id}
       />
     </>
   );

@@ -1,6 +1,6 @@
 import NoteForm from "../components/NoteForm";
 import { useNote } from "../layout/NoteLayout";
-import { NoteData, Tag, NoteListProps } from "../utils/type";
+import { NoteData, Tag } from "../utils/type";
 import Navbar from "../layout/Navbar";
 import { tagsState } from "../store/state";
 import { useRecoilState } from "recoil";
@@ -8,11 +8,13 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { useAuth } from "../context/auth";
 
-function EditNote({ user }: NoteListProps) {
+function EditNote() {
   const note = useNote();
   const [availableTags, setAvailableTags] = useRecoilState<Tag[]>(tagsState);
   const [loading, setLoading] = useState(false);
+  const { auth } = useAuth();
   const navigate = useNavigate();
 
   const onSubmit = async (id: string, data: NoteData) => {
@@ -55,7 +57,7 @@ function EditNote({ user }: NoteListProps) {
         onAddTag={onAddTag}
         availableTags={availableTags}
         loading={loading}
-        user={user.id}
+        user={auth.user.id}
       />
     </>
   );
