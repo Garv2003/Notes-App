@@ -4,22 +4,21 @@ import {
   useOutletContext,
   useParams,
 } from "react-router-dom";
-import Loader from "../components/Loader";
-import { NoteListProps, Note } from "../utils/type";
+import { Note } from "../utils/type";
 import { useRecoilValue } from "recoil";
 import { notesState } from "../store/state";
+import toast from "react-hot-toast";
 
-function NoteLayout({ isLoaded, user }: NoteListProps) {
+function NoteLayout() {
   const { id } = useParams();
   const notes = useRecoilValue<Note[]>(notesState);
 
-  if (!isLoaded) return <Loader />;
-
-  if (!user) return <Navigate to="/sign-in" replace />;
-
   const note = notes.find((note) => note.id === id);
 
-  if (note == null) return <Navigate to="/" replace />;
+  if (note == null) {
+    toast.error("Note not found");
+    return <Navigate to="/" />;
+  }
 
   return <Outlet context={note} />;
 }

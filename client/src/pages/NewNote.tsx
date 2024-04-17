@@ -11,7 +11,7 @@ import { useAuth } from "../context/auth";
 function NewNote() {
   const navigate = useNavigate();
   const [availableTags, setAvailableTags] = useRecoilState<Tag[]>(tagsState);
-  const { auth } = useAuth() || {};
+  const { auth } = useAuth();
   const [loading, setLoading] = useState(false);
 
   async function onSubmit(data: NoteData) {

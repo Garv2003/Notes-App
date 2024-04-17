@@ -3,7 +3,8 @@ import { useUser } from "@clerk/clerk-react";
 import axios from "axios";
 import Loader from "../components/Loader";
 
-const AuthContext = createContext({});
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const AuthContext = createContext<any>(null);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const { isSignedIn, user, isLoaded } = useUser();
