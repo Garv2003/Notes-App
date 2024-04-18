@@ -33,6 +33,7 @@ type SimplifiedNote = {
     tags: Tag[];
     title: string;
     id: string;
+    content: string;
 };
 
 type EditTagsModalProps = {

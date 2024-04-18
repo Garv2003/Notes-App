@@ -14,7 +14,7 @@ router.get('/notes/user/:id', GetUserNotes)
 
 router.post('/note', CreateNote)
 
-router.get('note/:id', GetNoteById)
+router.get('/note/:id', GetNoteById)
 
 router.patch('/note/:id', UpdateNote)
 

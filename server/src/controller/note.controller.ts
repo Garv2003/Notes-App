@@ -86,12 +86,14 @@ const GetNoteById = async (req: Request, res: Response) => {
         res.json({ success: true, note })
     }
     catch (err) {
+        console.error(err)
         res.status(400).json({ success: false, error: err })
     }
 }
 
 const UpdateNote = async (req: Request, res: Response) => {
-    const { title, markdown, tags } = req.body
+    console.log(req.body)
+    const { title, content, tags } = req.body
     const { id } = req.params
 
     try {
@@ -127,7 +129,7 @@ const UpdateNote = async (req: Request, res: Response) => {
             },
             data: {
                 title,
-                content: markdown,
+                content: content,
                 tags: {
                     connectOrCreate: tags.map((tag: any) => ({
 
@@ -139,6 +141,8 @@ const UpdateNote = async (req: Request, res: Response) => {
                 }
             }
         })
+
+        console.log(note)
 
         await client.del(`notes:user:${note.userId}`)
         await client.del(`note:noteId:${id}`)
