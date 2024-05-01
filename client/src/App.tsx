@@ -7,7 +7,7 @@ import Note from "./pages/Note";
 import EditNote from "./pages/EditNote";
 import SignInPage from "./pages/SignInPage";
 import SignUpPage from "./pages/SignUpPage";
-import ProtectedRoute from "./components/ProtectedRoute";
+import ProtectedRoute from "./layout/ProtectedRoute";
 
 function App() {
   return (
@@ -15,32 +15,13 @@ function App() {
       <Routes>
         <Route path="/sign-in" element={<SignInPage />} />
         <Route path="/sign-up" element={<SignUpPage />} />
-        <Route
-          path="/"
-          element={
-            <ProtectedRoute>
-              <NoteList />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/new"
-          element={
-            <ProtectedRoute>
-              <NewNote />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/:id"
-          element={
-            <ProtectedRoute>
-              <NoteLayout />
-            </ProtectedRoute>
-          }
-        >
-          <Route index element={<Note />} />
-          <Route path="edit" element={<EditNote />} />
+        <Route element={<ProtectedRoute />}>
+          <Route path="/" element={<NoteList />} />
+          <Route path="/new" element={<NewNote />} />
+          <Route path="/:id" element={<NoteLayout />}>
+            <Route index element={<Note />} />
+            <Route path="edit" element={<EditNote />} />
+          </Route>
         </Route>
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
