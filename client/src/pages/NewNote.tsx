@@ -24,6 +24,7 @@ function NewNote() {
         userId: auth.user?.id,
       });
 
+      notes.push(res.data.note);
       setNotes((prev) => [...prev, res.data.note]);
 
       setLoading(false);
